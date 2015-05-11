@@ -1,5 +1,7 @@
 <?php
 
+$id_number = 0; //USed in printNode
+
 //Get all categories from wp
 $categories = get_categories();
 
@@ -15,19 +17,35 @@ foreach($categories as $category){
 	}
 }
 
+$fag_id = 1;
+
 //Print parentcats and call getposts and printsubcategories on them
 foreach($parentcats as $category) {
+
 
 	$cat_id = $category->term_id; //get ID from wp
 
 	//This is supposed to be the root / temp until testing is over
-	echo '<h2><span class="emne">' . $category->name . '</span> </h2>';
+	//echo '<h2><span class="emne">' . $category->name . '</span> </h2>';
 
-	printPosts($cat_id);
+	$class = "node" . $cat_id;
+	$html_id = 'fag' . $fag_id;
+	$fag_id = $fag_id + 1;
 
-	printSubCategories($cat_id);
+
+	echo '<div class="fag-container">';
+	echo '<div id="' . $html_id . '" class="' . $class . ' fag node">';
+	echo '<p>' . $category->name . '</p>';
+	echo '</div>';
+	echo '</div>';
+
+	printPosts($cat_id, $class, $html_id);
+
+	printSubCategories($cat_id, $class, $html_id);
 
 }
+
+
 
 /**
  *
@@ -35,22 +53,26 @@ foreach($parentcats as $category) {
  *
  * @param $category_id: the ID of the category
  */
-function printSubCategories($category_id){
+function printSubCategories($category_id, $parent_HTML_class, $parent_id){
 
-		$children = get_categories( array( 'child_of' => $category_id ) );
+
+		$children = get_categories( array( 'parent' => $category_id ) ); //get all categories which are direct decendants
 
 		if(!empty($children)) {
+
+			$child_HTML_class = $parent_HTML_class . "_child";
 
 			foreach($children as $category) {
 
 				$cat_id = $category->term_id;
 
-				echo '<h3><span class="emne">' . $category->name . '</span> </h3>';
+				//echo '<h3><span class="emne">' . $category->name . '</span> </h3>';
+				$node_id = printNode($category->name, array($child_HTML_class, 'emne', 'node'), $parent_id);
 
-				printPosts($cat_id);
+				printPosts($cat_id, $child_HTML_class, 'node' . $node_id);
 
 				//MUHAHAHAHAHHAHAHAHAHHAHA BEEEWWWAAAAARRRREEEEE RECCUUUURRRRSSSSIIIIOOOOONNNNN!!!!!!!!!
-				printSubCategories($cat_id);
+				printSubCategories($cat_id, $child_HTML_class, 'node' . $node_id);
 
 			}
 
@@ -62,13 +84,14 @@ function printSubCategories($category_id){
  * Responsible printing nice HTML for all posts in a given category
  * This function contains the WP loop.
  *
- * @param $cat_id The ID of the category which posts you want printed
+ * @param $category_id: The ID of the category which posts you want printed
  *
  */
-function printPosts($cat_id){
+function printPosts($category_id, $parent_HTML_class, $parent_id){
 
+	$child_HTML_class = $parent_HTML_class . "_child";
 
-	$query = new WP_Query(array('category__in' => $cat_id));
+	$query = new WP_Query(array('category__in' => $category_id)); //Generate wp query with direct children
 
 	if($query->have_posts()) {
 		while ($query->have_posts()) {
@@ -76,8 +99,7 @@ function printPosts($cat_id){
 
 
 
-		<?php echo the_title(); ?>
-
+		<?php printNode(get_the_title(), array('side', $child_HTML_class), $parent_id);?>
 
 	<?php
 
@@ -87,6 +109,55 @@ function printPosts($cat_id){
 
 
 }
+
+
+
+/**
+ * Outputs HTML containing javascript/JQuery to connect two nodes
+ *
+*@param $child_id
+ * @param $parent_id
+ */
+function connectNodes( $child_id, $parent_id) {
+
+
+	echo '<script type="text/javascript">';
+	echo '$(document).ready(function() {';
+	echo "$('#" . $parent_id . "').connections({to: '#" . $child_id . "', 'class': 'line'});";
+	echo '});';
+
+	echo '</script>';
+
+}
+
+/**
+ *
+ * Responsible for prinitn HTML for a single node
+ * @param $titel: the titel of the node
+ * @param $array_of_classes: an array cntaining the extra classes the node should have
+ */
+function printNode($titel, $array_of_classes, $parent_id){
+
+	global $id_number;
+
+	$id_number = $id_number + 1;
+
+	$classes = "";
+	foreach($array_of_classes as $class){
+		$classes = $classes . " " .  $class;
+	}
+
+	echo '<div id="node' . $id_number . '" class="draggable' . $classes . '">';
+	echo '<p>' . $titel . '</p>';
+	echo '</div>';
+
+	connectNodes('node' . $id_number, $parent_id);
+
+	return $id_number;
+
+
+}
+
 
 
 ?>

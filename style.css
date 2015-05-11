@@ -3,6 +3,42 @@
 
 
 
+.line {
+    border:3px solid #051;
+    opacity: 0.5;
+    z-index:1;
+    border-radius:100%;
+    pointer-events:none;
+}
 
 
+
+.draggable {
+    background: #deb;
+    line-height: 40px;
+    padding: 15px;
+    float: left;
+    margin: 1em;
+    border: 1px dotted;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+
+.fag-container {
+    width: 25%;
+
+}
+.fag {
+
+    background: #deb;
+    line-height: 40px;
+    padding: 15px;
+    float: left;
+    margin: 1em;
+    border: 1px dotted;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+
+
+
+}
 

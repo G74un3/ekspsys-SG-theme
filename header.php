@@ -14,7 +14,14 @@
 			$( ".draggable" ).draggable();
 			$.repeat().add('connection').each($).connections('update').wait(0);
 
+			$('#fag1').position({
+				my: "center bottom",
+				at: "center bottom",
+				of: "#content"
+
+			});
 		});
+
 	</script>
 
 

@@ -20,6 +20,15 @@
 				of: "#content"
 
 			});
+
+			$('#fag2').position({
+				my: "left bottom",
+				at: "left bottom",
+				of: "#content"
+
+			});
+
+
 		});
 
 	</script>

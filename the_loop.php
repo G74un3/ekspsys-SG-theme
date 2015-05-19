@@ -93,6 +93,8 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
 	$node_number = $temp_array[0]; //This is the node_number
 	$array_posts = $temp_array[1]; //This is the array of post id's and their parents
 
+	//print_r($array_posts);
+
 	checkAndCalculatePlacements($array_posts, $array_categories);
 
 	return $node_number;
@@ -109,7 +111,6 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
  */
 function pushToPlacementArray($push_array, $parent_id, $node_number, $node_row) {
 
-	echo "NODENUMBER " . $node_number . PHP_EOL;
 
 	array_push($push_array, array(
 		'parentid' => $parent_id,
@@ -178,12 +179,12 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 	}
 
-
 	if ($size == 0) { // Check to ensure that we do not divide by zero
 
 		return $res;
 
 	}
+
 
 	$intervalNode = $size / 2; // The number of elements on each side of root. We know that it is an integer at this point!
 
@@ -192,13 +193,13 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	//Left side
 
 	$cat_size_before = count($array_of_categories);
-	$loop_array      = $array_of_categories;
+	$loop_array      = array_merge($array_of_categories, $array_of_posts);
 
 	for ($i = 0; $i < $intervalNode; $i ++) {
 
-		if (round($cat_size_before / 2) == count($array_of_categories)) {
+		/*if (round($cat_size_before / 2) == count($array_of_categories)) {
 			$loop_array = $array_of_posts; //shift array when half is emptied
-		}
+		}*/
 
 		$x = $height * ( cos(90 + $offset_angle * ( i + 1 )) );
 		$y = $height * ( sin(90 + $offset_angle * ( i + 1 )) );
@@ -206,22 +207,24 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 	}
 
-	//Right side
-	$loop_array = $array_of_categories;
-	for ($i = 0; $i < $intervalNode; $i ++) {
 
-		if (empty( $array_of_categories )) {
+	//Right side
+	//$loop_array = $array_of_categories;
+	for ($i = $intervalNode; $i < $size; $i ++) {
+
+		/*if (empty( $array_of_categories )) {
 
 			$loop_array = $array_of_posts;
 
-		}
+		}*/
 
 		$x = $height * ( cos($offset_angle * ( i + 1 )) );
 		$y = $height * ( sin($offset_angle * ( i + 1 )) );
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 
-
 	}
+
+	print_r($res);
 
 	return $res;
 }
@@ -229,7 +232,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 function addCoordinates($arrayvalue, $x, $y) {
 
 
-	if ( ! empty( $arrayvalue )) {
+	if (!empty( $arrayvalue )) {
 
 		return array_merge($arrayvalue, array( 'x' => $x, 'y' => $y ));
 
@@ -293,6 +296,7 @@ function printPosts($category_id, $parent_HTML_class, $parent_id, $node_number, 
 	} //End if
 
 
+	//print_r($array_of_nodes);
 	return array( $node_number, $array_of_nodes );
 
 }

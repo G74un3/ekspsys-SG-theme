@@ -3,7 +3,7 @@
 
 $array_of_placements = array();
 $angle               = 80;
-$height              = 10;
+$height              = 100;
 
 //Get all categories from wp
 $categories = get_categories();
@@ -167,7 +167,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	}
 
 
-	if ($odd and count($array_of_categories > 0)) {
+	if ($odd and count($array_of_categories) > 0) {
 
 		array_push($res, addCoordinates(array_pop($array_of_categories), 0, $height));
 		$size = $size - 1;
@@ -192,39 +192,47 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 	//Left side
 
-	$cat_size_before = count($array_of_categories);
-	$loop_array      = array_merge($array_of_categories, $array_of_posts);
+	$lookingAtCategories = true;
+	$loop_array      = $array_of_categories;
 
 	for ($i = 0; $i < $intervalNode; $i ++) {
 
-		/*if (round($cat_size_before / 2) == count($array_of_categories)) {
+
+		if (round(count($array_of_categories) / 2) == count($loop_array) and $lookingAtCategories == true) {
+
+			$array_of_categories = $loop_array; //Safes the progress onto array of categories
 			$loop_array = $array_of_posts; //shift array when half is emptied
-		}*/
+			$lookingAtCategories = false;
+
+		}
 
 		$x = $height * ( cos(90 + $offset_angle * ( i + 1 )) );
 		$y = $height * ( sin(90 + $offset_angle * ( i + 1 )) );
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
-
 	}
 
 
 	//Right side
-	//$loop_array = $array_of_categories;
+	$array_of_posts = $loop_array; //Safes the progress from loop array to array of posts before shifting
+	$loop_array = $array_of_categories; //Shifting back to categotries for right side
+	$lookingAtCategories = true;
+
 	for ($i = $intervalNode; $i < $size; $i ++) {
 
-		/*if (empty( $array_of_categories )) {
 
-			$loop_array = $array_of_posts;
+		if (empty( $loop_array ) and $lookingAtCategories == true) {
 
-		}*/
+			$loop_array = $array_of_posts; //Shift to posts when categories are empty
+			$lookingAtCategories = false;
+
+		}
 
 		$x = $height * ( cos($offset_angle * ( i + 1 )) );
 		$y = $height * ( sin($offset_angle * ( i + 1 )) );
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
-
 	}
 
-	print_r($res);
+	//print_r($res);
 
 	return $res;
 }

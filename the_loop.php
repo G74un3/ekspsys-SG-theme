@@ -1,9 +1,9 @@
 <?php
 
-
+//Constantssed for calculating placements
 $array_of_placements = array();
 $angle               = 80;
-$height              = 100;
+$height              = 200;
 
 //Get all categories from wp
 $categories = get_categories();
@@ -158,23 +158,24 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	$res  = array();
 	$size = count($array_of_posts) + count($array_of_categories);
 
-	$odd = odd($size);
-
 	if ($size == 0) {
 
 		return null;
-
 	}
+
+	$odd = odd($size);
 
 
 	if ($odd and count($array_of_categories) > 0) {
 
-		array_push($res, addCoordinates(array_pop($array_of_categories), 0, $height));
+		$coordinates = addCoordinates(array_pop($array_of_categories), 0, $height);
+		array_push($res, $coordinates);
 		$size = $size - 1;
 
 	} elseif ($odd and empty( $array_of_categories ) and count($array_of_posts) > 0) {
 
-		array_push($res, addCoordinates(array_pop($array_of_posts), 0, $height));
+		$coordinates = addCoordinates(array_pop($array_of_posts), 0, $height);
+		array_push($res, $coordinates);
 		$size = $size - 1;
 
 	}
@@ -187,7 +188,6 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 
 	$intervalNode = $size / 2; // The number of elements on each side of root. We know that it is an integer at this point!
-
 	$offset_angle = $angle / $intervalNode;
 
 	//Left side
@@ -206,8 +206,9 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		}
 
-		$x = $height * ( cos(90 + $offset_angle * ( i + 1 )) );
-		$y = $height * ( sin(90 + $offset_angle * ( i + 1 )) );
+		$rad_argument = deg2rad(180 + $offset_angle * ( i + 1 ));
+		$x = $height * ( cos($rad_argument));
+		$y = $height * ( sin($rad_argument));
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 
@@ -227,8 +228,9 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		}
 
-		$x = $height * ( cos($offset_angle * ( i + 1 )) );
-		$y = $height * ( sin($offset_angle * ( i + 1 )) );
+		$rad_argument = deg2rad(270 + $offset_angle * ( i + 1 ));
+		$x = $height * (cos($rad_argument));
+		$y = $height * (sin($rad_argument));
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 

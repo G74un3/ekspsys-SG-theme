@@ -20,7 +20,7 @@ function generatePositionJquery( $elements ) {
 	        echo "//" . $row . PHP_EOL;
             echo "var parent_pos = $('#" . $parent_id . "').offset(); \n";
 
-            echo "$('#" . $node_id . "').offset({top: parent_pos.top + " . $y . ", left: parent_pos.left + " . $x . "});" . PHP_EOL;
+            echo "$('#" . $node_id . "').offset({top: parent_pos.top - " . $y . ", left: parent_pos.left + " . $x . "});" . PHP_EOL;
 
         }
 

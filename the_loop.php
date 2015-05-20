@@ -206,7 +206,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		}
 
-		$rad_argument = deg2rad(180 + $offset_angle * ( i + 1 ));
+		$rad_argument = deg2rad($offset_angle * ( $i + 1 ));
 		$x = $height * ( cos($rad_argument));
 		$y = $height * ( sin($rad_argument));
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
@@ -228,7 +228,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		}
 
-		$rad_argument = deg2rad(270 + $offset_angle * ( i + 1 ));
+		$rad_argument = deg2rad( $offset_angle * ( $i + 1 ));
 		$x = $height * (cos($rad_argument));
 		$y = $height * (sin($rad_argument));
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));

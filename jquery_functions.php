@@ -19,8 +19,9 @@ function generatePositionJquery( $elements ) {
 
 	        echo "//" . $row . PHP_EOL;
             echo "var parent_pos = $('#" . $parent_id . "').offset(); \n";
-
-            echo "$('#" . $node_id . "').offset({top: parent_pos.top - " . $y . ", left: parent_pos.left + " . $x . "});" . PHP_EOL;
+	        //echo "var parent_width = $('#" . $parent_id . "').width(); \n";
+			echo "var parent_width = 0;";
+            echo "$('#" . $node_id . "').offset({top: parent_pos.top - " . $y . ", left: parent_pos.left + parent_width + " . $x . "});" . PHP_EOL;
 
         }
 

@@ -10,9 +10,6 @@
 
 
 
-
-			//<?php print_r($array_of_placements)?>
-
 			<script type="text/JavaScript">
 				$(document).ready(function () {
 

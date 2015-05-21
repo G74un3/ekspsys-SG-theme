@@ -93,7 +93,6 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
 	$node_number = $temp_array[0]; //This is the node_number
 	$array_posts = $temp_array[1]; //This is the array of post id's and their parents
 
-	//print_r($array_posts);
 
 	checkAndCalculatePlacements($array_posts, $array_categories);
 
@@ -142,7 +141,7 @@ function checkAndCalculatePlacements($array_posts, $array_categories) {
 
 	$temparray = calculatePlacements($array_posts, $array_categories);
 
-	if ($temparray != null) {
+	if ((count($array_categories) + count($array_posts)) != 0) {
 
 		$array_of_placements = array_merge($array_of_placements, $temparray);
 
@@ -158,10 +157,6 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	$res  = array();
 	$size = count($array_of_posts) + count($array_of_categories);
 
-	if ($size == 0) {
-
-		return null;
-	}
 
 	$odd = odd($size);
 
@@ -234,7 +229,6 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 
-	//print_r($res);
 
 	return $res;
 }

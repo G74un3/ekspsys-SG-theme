@@ -2,8 +2,11 @@
 
 //Constantssed for calculating placements
 $array_of_placements = array();
+$array_of_placements_by_parent = array();
+$fag = array();
 $angle               = 80;
-$height              = 200;
+$height              = 120;
+$width               = 150;
 
 //Get all categories from wp
 $categories = get_categories();
@@ -34,17 +37,18 @@ foreach ($parentcats as $category) {
 
 	$class   = "wpid" . $cat_id;
 	$html_id = 'fag' . $fag_id;
-	$fag_id  = $fag_id + 1;
 
 
-	echo '<div class="fag-container">';
-	echo '<div id="' . $html_id . '" class="' . $class . ' fag node">';
-	echo '<p>' . $category->name . '</p>';
-	echo '</div>';
-	echo '</div>';
+
 
 	$node_number = printSubCategories($cat_id, 1, $html_id, $node_number);
 
+	$array_of_placements_by_parent['fag' . $fag_id] = $array_of_placements; //pushed so it is sorted by parent
+	$array_of_placements = array();
+
+	$fag['fag' . $fag_id] = $category->name; //Save name and id of fag to array
+
+	$fag_id  = $fag_id + 1;
 }
 
 
@@ -78,7 +82,7 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
 				$child_HTML_class,
 				'emne',
 				'node'
-			), $parent_id, $node_number);
+			), $node_number);
 
 
 			//MUHAHAHAHAHHAHAHAHAHHAHA BEEEWWWAAAAARRRREEEEE RECCUUUURRRRSSSSIIIIOOOOONNNNN!!!!!!!!!
@@ -154,6 +158,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 	global $angle;
 	global $height;
+	global $width;
 	$res  = array();
 	$size = count($array_of_posts) + count($array_of_categories);
 
@@ -185,7 +190,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	$intervalNode = $size / 2; // The number of elements on each side of root. We know that it is an integer at this point!
 	$offset_angle = $angle / $intervalNode;
 
-	//Left side
+	//Right side
 
 	$lookingAtCategories = true;
 	$loop_array      = $array_of_categories;
@@ -201,19 +206,19 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		}
 
-		$rad_argument = deg2rad($offset_angle * ( $i + 1 ));
-		$x = $height * ( cos($rad_argument));
-		$y = $height * ( sin($rad_argument));
+		$rad_argument = deg2rad(90 - ($offset_angle * ( $i + 1 )));
+		$x = $width * (cos($rad_argument));
+		$y = $height * (1 + sin($rad_argument));
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 
 
-	//Right side
+	//Left side
 	$array_of_posts = $loop_array; //Safes the progress from loop array to array of posts before shifting
 	$loop_array = $array_of_categories; //Shifting back to categotries for right side
 	$lookingAtCategories = true;
 
-	for ($i = $intervalNode; $i < $size; $i ++) {
+	for ($i = 0; $i < $size; $i ++) {
 
 
 		if (empty( $loop_array ) and $lookingAtCategories == true) {
@@ -223,9 +228,9 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		}
 
-		$rad_argument = deg2rad( $offset_angle * ( $i + 1 ));
-		$x = $height * (cos($rad_argument));
-		$y = $height * (sin($rad_argument));
+		$rad_argument = deg2rad( 90 + ($offset_angle * ( $i + 1 )));
+		$x = $width * (cos($rad_argument));
+		$y = $height * (1 + sin($rad_argument));
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 
@@ -287,7 +292,7 @@ function printPosts($category_id, $parent_HTML_class, $parent_id, $node_number, 
 			$array_of_nodes = pushToPlacementArray($array_of_nodes, $parent_id, $node_number, $node_row);
 
 
-			$node_number = printNode(get_the_title(), array('side', $parent_HTML_class), $parent_id, $node_number);
+			$node_number = printNode(get_the_title(), array( 'side', $parent_HTML_class ), $node_number);
 
 
 			?>
@@ -314,31 +319,16 @@ function queryOfPosts($category_id) {
 
 
 /**
- * Outputs HTML containing javascript/JQuery to connect two nodes
- *
- * @param $child_id
- * @param $parent_id
- */
-function connectNodes($child_id, $parent_id) {
-
-
-	echo '<script type="text/javascript">';
-	echo '$(document).ready(function() {';
-	echo "$('#" . $parent_id . "').connections({to: '#" . $child_id . "', 'class': 'line'});";
-	echo '});';
-
-	echo '</script>';
-
-}
-
-/**
  *
  * Responsible for prinitn HTML for a single node
  *
  * @param $titel : the titel of the node
  * @param $array_of_classes : an array cntaining the extra classes the node should have
+ * @param $node_number
+ *
+ * @return
  */
-function printNode($titel, $array_of_classes, $parent_id, $node_number) {
+function printNode($titel, $array_of_classes, $node_number) {
 
 	$classes = "";
 	foreach ($array_of_classes as $class) {
@@ -353,8 +343,6 @@ function printNode($titel, $array_of_classes, $parent_id, $node_number) {
 	echo '<p>' . $titel . '</p>';
 	echo '</div>';
 
-
-	connectNodes($html_id, $parent_id);
 
 	return $node_number;
 

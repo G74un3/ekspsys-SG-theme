@@ -14,20 +14,28 @@
 			$( ".draggable" ).draggable();
 			$.repeat().add('connection').each($).connections('update').wait(0);
 
-			$('#fag1').position({
-				my: "center bottom",
-				at: "center bottom",
-				of: "#content"
 
-			});
 
-			$('#fag2').position({
+			$('#rod1').position({
 				my: "left bottom",
 				at: "left bottom",
 				of: "#content"
 
 			});
 
+			$('#rod2').position({
+				my: "center bottom",
+				at: "center bottom",
+				of: "#content"
+
+			});
+
+			$('#rod3').position({
+				my: "right bottom",
+				at: "right bottom",
+				of: "#content"
+
+			});
 
 
 		});

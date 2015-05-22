@@ -4,8 +4,8 @@
 
 
 #content {
-    height: 400 px;
     background-color: #deb;
+    height: 2000px;
 }
 
 
@@ -15,7 +15,7 @@
     opacity: 0.5;
     z-index:1;
     border-radius:100%;
-    pointer-events:none;
+    pointer-events: none;
 }
 
 
@@ -30,27 +30,50 @@
     background:#000;
 }
 
-.fag {
 
-    width: 100 px;
-    height: 100 px;
-    line-height: 40px;
-    margin: 1em;
-    border: 1px dotted;
-    text-align: center;
+
+#container {
+    border: 2px dashed #444;
+    height: 125px;
+    text-align: justify;
+    -ms-text-justify: distribute-all-lines;
+    text-justify: distribute-all-lines;
+
+    /* just for demo */
+    min-width: 612px;
+    position: absolute;
+    bottom: 0px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+}
+
+#container > :first-child {
+
+    margin-left: 100px;
 
 }
 
+#container > #last-child {
+
+    margin-right: 100px;
+
+}
 
 .fag-container {
-    width: 20%; /* Bestemmer afstanden mellem fag, skal være 100 / antal fag man ønsker at vise */
-
+    width: 300px;
+    height: 125px;
+    display: inline-block;
+    border: dashed;
+    text-align: center;
+}
+.stretch {
+    width: 100%;
+    display: inline-block;
+    font-size: 0;
+    line-height: 0
 }
 
-#fag1 {
-
-
-}
 
 
 

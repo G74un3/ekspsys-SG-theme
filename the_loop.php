@@ -40,8 +40,9 @@ foreach ($parentcats as $category) {
 
 
 
-
+	echo '<span id="fag' . $fag_id . '-container" style="display:none">' . PHP_EOL;
 	$node_number = printSubCategories($cat_id, 1, $html_id, $node_number);
+	echo '</span>' . PHP_EOL;
 
 	$array_of_placements_by_parent['fag' . $fag_id] = $array_of_placements; //pushed so it is sorted by parent
 	$array_of_placements = array();

@@ -175,9 +175,14 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 	} elseif ($odd and empty( $array_of_categories ) and count($array_of_posts) > 0) {
 
-		$coordinates = addCoordinates(array_pop($array_of_posts), 0, $height);
+		$rad_argument = deg2rad(90);
+		$y = $height * (sin($rad_argument));
+
+
+		$coordinates = addCoordinates(array_pop($array_of_posts), 0, $y);
 		array_push($res, $coordinates);
 		$size = $size - 1;
+
 
 	}
 

@@ -60,12 +60,13 @@
 
 
 				$(".fag").qtip({
-					content: 'I\'m at the top right of my target',
+					content: {
+						title: 'I like turtles!',
+						text: 'I\'m at the top right of my target'
+					},
 					position: {
-						corner: {
-							target: 'topRight',
-							tooltip: 'bottomLeft'
-						}
+						my: "top center",
+						at: "bottom center"
 					}
 				});
 

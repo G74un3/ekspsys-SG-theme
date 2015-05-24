@@ -5,7 +5,7 @@
 
 #content {
     background-color: #deb;
-    height: 2000px;
+    height: 600px;
 }
 
 
@@ -55,19 +55,11 @@
 
 
 #container {
-    border: 2px dashed #444;
     height: 125px;
     text-align: justify;
-    -ms-text-justify: distribute-all-lines;
-    text-justify: distribute-all-lines;
 
     /* just for demo */
     min-width: 612px;
-    position: absolute;
-    bottom: 0px;
-    margin-right: auto;
-    margin-left: auto;
-    width: 100%;
 }
 
 #container > :first-child {
@@ -86,8 +78,8 @@
     width: 300px;
     height: 125px;
     display: inline-block;
-    border: dashed;
     text-align: center;
+    border: dashed;
 }
 .stretch {
     width: 100%;
@@ -95,8 +87,3 @@
     font-size: 0;
     line-height: 0
 }
-
-
-
-
-

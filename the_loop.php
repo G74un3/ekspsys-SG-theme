@@ -1,12 +1,12 @@
 <?php
 
 //Constantssed for calculating placements
-$array_of_placements = array();
+$array_of_placements           = array();
 $array_of_placements_by_parent = array();
-$fag = array();
-$angle               = 80;
-$height              = 120;
-$width               = 150;
+$fag                           = array();
+$angle                         = 80;
+$height                        = 150;
+$width                         = 150;
 
 //Get all categories from wp
 $categories = get_categories();
@@ -39,17 +39,124 @@ foreach ($parentcats as $category) {
 	$html_id = 'fag' . $fag_id;
 
 
+	$node_number = printSubCategories($cat_id, 1, $html_id, $node_number, 'fag' . $fag_id);
 
-	echo '<span id="fag' . $fag_id . '-container" style="display:none">' . PHP_EOL;
-	$node_number = printSubCategories($cat_id, 1, $html_id, $node_number);
-	echo '</span>' . PHP_EOL;
+	$array_of_placements_by_parent[ 'fag' . $fag_id ] = $array_of_placements; //pushed so it is sorted by parent
+	$array_of_placements                              = array();
 
-	$array_of_placements_by_parent['fag' . $fag_id] = $array_of_placements; //pushed so it is sorted by parent
-	$array_of_placements = array();
+	$fag[ 'fag' . $fag_id ] = $category->name; //Save name and id of fag to array
 
-	$fag['fag' . $fag_id] = $category->name; //Save name and id of fag to array
+	$fag_id = $fag_id + 1;
 
-	$fag_id  = $fag_id + 1;
+}
+
+
+printFag($array_of_placements_by_parent);
+
+
+function printFag($elements) {
+
+
+	foreach ($elements as $fag => $array) {
+
+
+		echo '<span id="' . $fag . '-container" style="display:none">' . PHP_EOL;
+
+		printNodes($fag, $array);
+
+
+		echo '</span>' . PHP_EOL;
+
+
+	}
+
+}
+
+
+function printNodes($name, $nodes) {
+
+
+	//usort($nodes, "cmp");
+
+	foreach ($nodes as $node) {
+
+		$title = $node['title'];
+		//$classes = $array['classes'];
+		$classes = array();
+		$id      = $node['id'];
+		//$attributes = $array['attributes'];
+		$attributes = array();
+		$parent_id  = $node['parentid'];
+		$row        = $node['row'];
+		$x          = $node['x'];
+		$y          = $node['y'];
+
+		if ( !empty( $parent_id ) and !empty( $id )) {
+
+
+			printNode($title, $id, $classes, $attributes, $parent_id, $row, $name, $x, $y);
+
+
+		}
+
+	}
+
+
+}
+
+
+
+/**
+ *
+ * Defines how the array are sorted
+ *
+ * @param $a
+ * @param $b
+ *
+ * @return mixed
+ */
+function cmp($a, $b) {
+
+	return $a['noderow'] - $b['noderow'];
+
+}
+
+
+/**
+ *
+ * Responsible for prinitn HTML for a single node
+ *
+ * @param $titel : the titel of the node
+ * @param $array_of_classes : an array cntaining the extra classes the node should have
+ * @param $node_number
+ *
+ * @param $attributes
+ *
+ * @return
+ */
+function printNode($title, $id, $array_of_classes, $array_of_attributes, $parent_id, $row, $fag, $x_offset, $y_offset) {
+
+	$classes = "";
+	foreach ($array_of_classes as $class) {
+		$classes = $classes . " " . $class;
+	}
+
+	$attributes = "";
+	foreach ($array_of_attributes as $attribute) {
+		$attributes = $attributes . " " . $attribute;
+	}
+
+
+	?>
+
+	<div
+	id="<?php echo $id; ?>" class="draggable <?php echo $classes . " " . $fag . " row" . $row; ?>" <?php echo $attributes; ?> parent="<?php echo $parent_id; ?>" row="<?php echo $row; ?>" x-offset="<?php echo $x_offset; ?>" y-offset="<?php echo $y_offset; ?>">
+	<p><?php echo $title; ?> </p>
+	</div>
+
+
+<?php
+
 }
 
 
@@ -58,8 +165,14 @@ foreach ($parentcats as $category) {
  * Prints all sub categories (and their) posts of a given category
  *
  * @param $category_id : the ID of the category
+ * @param $row_number
+ * @param $parent_id
+ * @param $node_number
+ * @param $fag
+ *
+ * @return mixed
  */
-function printSubCategories($category_id, $row_number, $parent_id, $node_number) {
+function printSubCategories($category_id, $row_number, $parent_id, $node_number, $fag) {
 
 	$array_categories = array();
 
@@ -67,7 +180,7 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
 
 	$child_HTML_class = 'row' . $row_number;
 
-	if ( !empty( $children )) {
+	if ( ! empty( $children )) {
 
 
 		foreach ($children as $category) {
@@ -76,24 +189,25 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
 			$current_child_number = $node_number; //Stored for recursive call
 
 
-			$array_categories = pushToPlacementArray($array_categories, $parent_id, $node_number, $row_number);
+			//$array_categories = pushToPlacementArray($array_categories, $parent_id, $node_number, $row_number);
+			$array_categories = pushToPlacementArray($array_categories, $node_number, $category->name, $parent_id, $row_number, array( $child_HTML_class ), array(), $fag);
+
+			//TODO: Find a nicer way of doing this :(
+			$node_number ++; // WE know we have just pushed so we increment node number
+
 
 			//Prints current category
-			$node_number = printNode($category->name, array(
-				$child_HTML_class,
-				'emne',
-				'node'
-			), $node_number);
+			//$node_number = printNode($category->name, array($child_HTML_class, 'emne', 'node'), $node_number, "");
 
 
 			//MUHAHAHAHAHHAHAHAHAHHAHA BEEEWWWAAAAARRRREEEEE RECCUUUURRRRSSSSIIIIOOOOONNNNN!!!!!!!!!
-			$node_number = printSubCategories($cat_id, $row_number + 1, nodifyNumber($current_child_number), $node_number);
+			$node_number = printSubCategories($cat_id, $row_number + 1, nodifyNumber($current_child_number), $node_number, $fag);
 
 		}
 
 	}
 
-	$temp_array = printPosts($category_id, $child_HTML_class, $parent_id, $node_number, $row_number);
+	$temp_array = printPosts($category_id, $child_HTML_class, $parent_id, $node_number, $row_number, $fag);
 
 	$node_number = $temp_array[0]; //This is the node_number
 	$array_posts = $temp_array[1]; //This is the array of post id's and their parents
@@ -105,6 +219,53 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
 
 }
 
+
+/**
+ * Responsible printing nice HTML for all posts in a given category
+ * This function contains the WP loop.
+ *
+ * @param $category_id : The ID of the category which posts you want printed
+ *
+ */
+
+
+function printPosts($category_id, $parent_HTML_class, $parent_id, $node_number, $node_row, $fag) {
+
+	$array_of_nodes = array();
+
+	$query = queryOfPosts($category_id);
+
+	if ($query->have_posts()) {
+		while ($query->have_posts()) {
+			$query->the_post();
+
+
+			//$array_of_nodes = pushToPlacementArray($array_of_nodes, $parent_id, $node_number, $node_row);
+			$array_of_nodes = pushToPlacementArray($array_of_nodes, $node_number, get_the_title(), $parent_id, $node_row, array( $parent_HTML_class ), array( generateQTipAttr(get_the_post_thumbnail(get_the_ID(), 'tool-tip')) ), $fag);
+
+			$node_number ++;
+
+
+			//$node_number = printNode(get_the_title(), array( 'side', $parent_HTML_class ), $node_number, ));
+
+		} //end while //End the loop
+
+	} //End if
+
+
+	//print_r($array_of_nodes);
+	return array( $node_number, $array_of_nodes );
+
+}
+
+function queryOfPosts($category_id) {
+
+	return new WP_Query(array( 'category__in' => $category_id )); //Generate wp query with direct children
+
+
+}
+
+
 /**
  * @param $push_array : The array you ewant to push  to
  * @param $parent_id : The id of the parent of the pushed node
@@ -113,13 +274,17 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number)
  *
  * @return mixed
  */
-function pushToPlacementArray($push_array, $parent_id, $node_number, $node_row) {
+function pushToPlacementArray($push_array, $node_number, $title, $parent_id, $row, $array_of_classes, $array_of_extra_attributes, $fag) {
 
 
 	array_push($push_array, array(
-		'parentid' => $parent_id,
-		'nodeid'   => nodifyNumber($node_number),
-		'noderow'  => $node_row
+		'parentid'   => $parent_id,
+		'id'         => nodifyNumber($node_number),
+		'row'        => $row,
+		'title'      => $title,
+		'classes'    => $array_of_classes,
+		'attributes' => $array_of_extra_attributes,
+		'fag'        => $fag
 	)); //Used to calculate placements later
 
 	return $push_array;
@@ -146,7 +311,7 @@ function checkAndCalculatePlacements($array_posts, $array_categories) {
 
 	$temparray = calculatePlacements($array_posts, $array_categories);
 
-	if ((count($array_categories) + count($array_posts)) != 0) {
+	if (( count($array_categories) + count($array_posts) ) != 0) {
 
 		$array_of_placements = array_merge($array_of_placements, $temparray);
 
@@ -160,6 +325,8 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	global $angle;
 	global $height;
 	global $width;
+
+	//TODO: Width and height constants should be moved to javascript (clientside)
 	$res  = array();
 	$size = count($array_of_posts) + count($array_of_categories);
 
@@ -175,9 +342,12 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 	} elseif ($odd and empty( $array_of_categories ) and count($array_of_posts) > 0) {
 
-		$coordinates = addCoordinates(array_pop($array_of_posts), 0, $height);
+		$rad_argument = deg2rad(90);
+		$y            = $height * ( sin($rad_argument) );
+		$coordinates = addCoordinates(array_pop($array_of_posts), 0, $y);
 		array_push($res, $coordinates);
 		$size = $size - 1;
+
 
 	}
 
@@ -194,7 +364,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 	//Right side
 
 	$lookingAtCategories = true;
-	$loop_array      = $array_of_categories;
+	$loop_array          = $array_of_categories;
 
 	for ($i = 0; $i < $intervalNode; $i ++) {
 
@@ -202,21 +372,21 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 		if (round(count($array_of_categories) / 2) == count($loop_array) and $lookingAtCategories == true) {
 
 			$array_of_categories = $loop_array; //Safes the progress onto array of categories
-			$loop_array = $array_of_posts; //shift array when half is emptied
+			$loop_array          = $array_of_posts; //shift array when half is emptied
 			$lookingAtCategories = false;
 
 		}
 
-		$rad_argument = deg2rad(90 - ($offset_angle * ( $i + 1 )));
-		$x = $width * (cos($rad_argument));
-		$y = $height * (1 + sin($rad_argument));
+		$rad_argument = deg2rad(90 - ( $offset_angle * ( $i + 1 ) ));
+		$x            = $width * ( cos($rad_argument) );
+		$y            = $height * ( 1 + sin($rad_argument) );
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 
 
 	//Left side
-	$array_of_posts = $loop_array; //Safes the progress from loop array to array of posts before shifting
-	$loop_array = $array_of_categories; //Shifting back to categotries for right side
+	$array_of_posts      = $loop_array; //Safes the progress from loop array to array of posts before shifting
+	$loop_array          = $array_of_categories; //Shifting back to categotries for right side
 	$lookingAtCategories = true;
 
 	for ($i = 0; $i < $size; $i ++) {
@@ -224,14 +394,14 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		if (empty( $loop_array ) and $lookingAtCategories == true) {
 
-			$loop_array = $array_of_posts; //Shift to posts when categories are empty
+			$loop_array          = $array_of_posts; //Shift to posts when categories are empty
 			$lookingAtCategories = false;
 
 		}
 
-		$rad_argument = deg2rad( 90 + ($offset_angle * ( $i + 1 )));
-		$x = $width * (cos($rad_argument));
-		$y = $height * (1 + sin($rad_argument));
+		$rad_argument = deg2rad(90 + ( $offset_angle * ( $i + 1 ) ));
+		$x            = $width * ( cos($rad_argument) );
+		$y            = $height * ( 1 + sin($rad_argument) );
 		array_push($res, addCoordinates(array_pop($loop_array), $x, $y));
 	}
 
@@ -242,7 +412,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 function addCoordinates($arrayvalue, $x, $y) {
 
 
-	if (!empty( $arrayvalue )) {
+	if ( ! empty( $arrayvalue )) {
 
 		return array_merge($arrayvalue, array( 'x' => $x, 'y' => $y ));
 
@@ -271,81 +441,17 @@ function odd($number) {
 
 
 /**
- * Responsible printing nice HTML for all posts in a given category
- * This function contains the WP loop.
  *
- * @param $category_id : The ID of the category which posts you want printed
+ * Generates attribute to qtip
  *
+ * @param $string
+ *
+ * @return string
  */
-function printPosts($category_id, $parent_HTML_class, $parent_id, $node_number, $node_row) {
-
-	$array_of_nodes = array();
-
-	$query = queryOfPosts($category_id);
-
-	if ($query->have_posts()) {
-		while ($query->have_posts()) {
-			$query->the_post(); ?> <!--//Start THE LOOP-->
+function generateQTipAttr($string) {
 
 
-
-			<?php
-			$array_of_nodes = pushToPlacementArray($array_of_nodes, $parent_id, $node_number, $node_row);
-
-
-			$node_number = printNode(get_the_title(), array( 'side', $parent_HTML_class ), $node_number);
-
-
-			?>
-
-			<!--//END THE LOOP-->
-		<?php
-
-		} //end while //End the loop
-
-	} //End if
-
-
-	//print_r($array_of_nodes);
-	return array( $node_number, $array_of_nodes );
-
-}
-
-function queryOfPosts($category_id) {
-
-	return new WP_Query(array( 'category__in' => $category_id )); //Generate wp query with direct children
-
-
-}
-
-
-/**
- *
- * Responsible for prinitn HTML for a single node
- *
- * @param $titel : the titel of the node
- * @param $array_of_classes : an array cntaining the extra classes the node should have
- * @param $node_number
- *
- * @return
- */
-function printNode($titel, $array_of_classes, $node_number) {
-
-	$classes = "";
-	foreach ($array_of_classes as $class) {
-		$classes = $classes . " " . $class;
-	}
-
-	$html_id = nodifyNumber($node_number);
-
-	$node_number ++;
-
-	echo '<div id="' . $html_id . '" class="draggable' . $classes . '">';
-	echo '<p>' . $titel . '</p>';
-	echo '</div>';
-
-
-	return $node_number;
+	return ' qtip-attr="' . $string . '"';
 
 
 }

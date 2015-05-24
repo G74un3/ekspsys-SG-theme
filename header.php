@@ -8,13 +8,13 @@
 	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 	<script type="text/javascript" src="http://creativecouple.github.com/jquery-timing/jquery-timing.min.js"></script>
 	<script type="text/javascript" src="https://raw.github.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js"></script>
+	<!-- WHAT IS THE ABOVE ????!??!?!?!??!?-->
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.connections.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/cutter.js"></script>
+	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/drawtrees.js"></script>
 
 
-
-    <script type="text/JavaScript">
+	<script type="text/JavaScript">
 		$(document).ready(function() {
 
 			$( ".draggable" ).draggable();

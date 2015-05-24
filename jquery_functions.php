@@ -20,11 +20,11 @@ function generateParentPositionFunction($name, $elements) {
 
 	foreach ($elements as $element) {
 
-		$node_id   = $element['nodeid'];
+		$node_id   = $element['id'];
 		$parent_id = $element['parentid'];
 		$x         = $element['x'];
 		$y         = $element['y'];
-		$row       = $element['noderow'];
+		$row       = $element['row'];
 
 		if ( ! empty( $parent_id ) or ! empty( $node_id )) {
 
@@ -72,7 +72,7 @@ function generateConnectionFunctionsFunction($name, $elements){
 
 	foreach ($elements as $element) {
 
-		$node_id   = $element['nodeid'];
+		$node_id   = $element['id'];
 		$parent_id = $element['parentid'];
 
 		echo "      $('#" . $parent_id . "').connections({to: '#" . $node_id . "', 'class': 'line'});" . PHP_EOL;
@@ -88,7 +88,7 @@ function generateConnectionFunctionsFunction($name, $elements){
 
 	foreach ($elements as $element) {
 
-		$node_id = $element['nodeid'];
+		$node_id = $element['id'];
 
 
 		echo "      $('#" . $node_id . "').connections('remove');" . PHP_EOL;
@@ -102,21 +102,6 @@ function generateConnectionFunctionsFunction($name, $elements){
 
 
 
-
-/**
- *
- * Defines how the array are sorted
- *
- * @param $a
- * @param $b
- *
- * @return mixed
- */
-function cmp($a, $b) {
-
-	return $a['noderow'] - $b['noderow'];
-
-}
 
 
 ?>

@@ -49,6 +49,8 @@
 			<button onclick="test()">DOOM!</button>
 			</div>
 
+
+
 			<?php
 			//Where all of the nodes and leaves are generated
 			include( get_template_directory() . '/the_loop.php' );
@@ -112,41 +114,55 @@
 
 				function placeFag(fag, rod) {
 
-					var fagid = '#' + fag;
+					var fagid = idfy(fag);
 
 					$(fagid).connections('remove'); //Removes any previous connections making shure that the treee will only be connected to the new root
 					$(fagid).removeAttr('id'); //removes fag id from any root that cuurently uses is thereby making shure that the tree is moved correctly
 					$('#' + rod + ' .fagplaceholder').attr("id", fag);
 
-					run = convertToFunction("place" + fag);
-					run();
 
-					return true;
-				}
+					var functioncall = function(element) {
 
-				function placeAndConnect(fag, rod){
-					placeFag(fag, rod);
-					connectFag(fag);
+						place(element.attr('id'), element.attr('parent'))
+
+					};
+
+					changeTree(functioncall, fag);
+
+					//run = convertToFunction("place" + fag);
+					//run();
+
 				}
 
 
 				function connectFag(fag) {
 
-					var fagid = '#' + fag;
 
-					disconnectFag(fag);
+					//disconnectFag(fag);
 
-					run = convertToFunction("connect" + fag);
-					run();
+					var functioncall = function(element) {
 
-					return true;
+						connect(element.attr('id'), element.attr('parent'));
+
+					};
+
+					changeTree(functioncall, fag);
+
 				}
+
+				function placeAndConnect(fag, rod){
+
+					placeFag(fag, rod);
+					connectFag(fag);
+
+
+				}
+
+
 
 
 				function disconnectFag(fag) {
 
-					run = convertToFunction("disconnect" + fag);
-					run();
 
 
 				}
@@ -160,14 +176,14 @@
 
 				}
 
-				<?php generatePositionJquery($array_of_placements_by_parent)?>
-				<?php generateConnectionFunctions($array_of_placements_by_parent)?>
-
-				$(document).ready(function () {
 
 
-				});
+
+				<?php// generateConnectionFunctions($array_of_placements_by_parent)?>
+
 			</script>
+			<?php// print_r($array_of_placements_by_parent)?>
+
 
 
 		</div>

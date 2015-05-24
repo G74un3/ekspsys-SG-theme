@@ -10,9 +10,11 @@
 	<script type="text/javascript" src="https://raw.github.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.connections.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/cutter.js"></script>
 
 
-	<script type="text/JavaScript">
+
+    <script type="text/JavaScript">
 		$(document).ready(function() {
 
 			$( ".draggable" ).draggable();

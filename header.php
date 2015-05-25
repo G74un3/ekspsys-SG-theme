@@ -10,12 +10,29 @@
 	<script type="text/javascript" src="https://raw.github.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.connections.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.qtip.min.js"></script>
+	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/particlebehaviour.js"></script>
+	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jqfloat.js"></script>
 
 
 	<script type="text/JavaScript">
 		$(document).ready(function() {
 
 			$( ".draggable" ).draggable();
+			$(".draggable").each(function() {
+
+				$(this).mousedown(function() {
+
+					$(this).stop();
+
+				}).mouseup(function(){
+
+					$(this).jqFloat();
+				});
+
+
+
+			});
+
 			$.repeat().add('connection').each($).connections('update').wait(0);
 
 

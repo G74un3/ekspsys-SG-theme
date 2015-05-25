@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.connections.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/jquery.qtip.min.js"></script>
 	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/drawtrees.js"></script>
+	<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/cutter.js"></script>
 
 
 	<script type="text/JavaScript">

@@ -2,7 +2,7 @@
 
 
 add_theme_support( 'post-thumbnails' ); //Adds support for featured images
-add_image_size( 'tool-tip', 0, 100, false ); //Adds the size of featured images usked in tooltips
+add_image_size( 'tool-tip', 10, 0, true); //Adds the size of featured images usked in tooltips
 
 
 // Replace category checkboxes with radio buttons so you can only choose one

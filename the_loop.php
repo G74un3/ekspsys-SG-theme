@@ -80,18 +80,18 @@ function printNodes($name, $nodes) {
 
 	foreach ($nodes as $node) {
 
-		$title = $node['title'];
-		//$classes = $array['classes'];
-		$classes = array();
-		$id      = $node['id'];
-		//$attributes = $array['attributes'];
-		$attributes = array();
-		$parent_id  = $node['parentid'];
-		$row        = $node['row'];
-		$x          = $node['x'];
-		$y          = $node['y'];
+		$title   = $node['title'];
+		$classes = $node['classes'];
+		//$classes = array();
+		$id         = $node['id'];
+		$attributes = $node['attributes'];
+		//$attributes = array();
+		$parent_id = $node['parentid'];
+		$row       = $node['row'];
+		$x         = $node['x'];
+		$y         = $node['y'];
 
-		if ( !empty( $parent_id ) and !empty( $id )) {
+		if ( ! empty( $parent_id ) and ! empty( $id )) {
 
 
 			printNode($title, $id, $classes, $attributes, $parent_id, $row, $name, $x, $y);
@@ -103,7 +103,6 @@ function printNodes($name, $nodes) {
 
 
 }
-
 
 
 /**
@@ -150,8 +149,11 @@ function printNode($title, $id, $array_of_classes, $array_of_attributes, $parent
 	?>
 
 	<div
-	id="<?php echo $id; ?>" class="draggable <?php echo $classes . " " . $fag . " row" . $row; ?>" <?php echo $attributes; ?> parent="<?php echo $parent_id; ?>" row="<?php echo $row; ?>" x-offset="<?php echo $x_offset; ?>" y-offset="<?php echo $y_offset; ?>">
-	<p><?php echo $title; ?> </p>
+		id="<?php echo $id; ?>"
+		class="draggable<?php echo $classes . " " . $fag . " row" . $row; ?>" <?php echo $attributes; ?>
+		parent="<?php echo $parent_id; ?>" row="<?php echo $row; ?>" x-offset="<?php echo $x_offset; ?>"
+		y-offset="<?php echo $y_offset; ?>">
+		<p><?php echo $title; ?> </p>
 	</div>
 
 
@@ -190,7 +192,10 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number,
 
 
 			//$array_categories = pushToPlacementArray($array_categories, $parent_id, $node_number, $row_number);
-			$array_categories = pushToPlacementArray($array_categories, $node_number, $category->name, $parent_id, $row_number, array( $child_HTML_class ), array(), $fag);
+			$array_categories = pushToPlacementArray($array_categories, $node_number, $category->name, $parent_id, $row_number, array(
+				$child_HTML_class,
+				'emne'
+			), array(), $fag);
 
 			//TODO: Find a nicer way of doing this :(
 			$node_number ++; // WE know we have just pushed so we increment node number
@@ -240,8 +245,18 @@ function printPosts($category_id, $parent_HTML_class, $parent_id, $node_number, 
 			$query->the_post();
 
 
-			//$array_of_nodes = pushToPlacementArray($array_of_nodes, $parent_id, $node_number, $node_row);
-			$array_of_nodes = pushToPlacementArray($array_of_nodes, $node_number, get_the_title(), $parent_id, $node_row, array( $parent_HTML_class ), array( generateQTipAttr(get_the_post_thumbnail(get_the_ID(), 'tool-tip')) ), $fag);
+			//$thumbnailsrc = the_post_thumbnail(get_the_ID(), 'tool-tip');
+
+
+			$thumbnailsrc = wp_get_attachment_url(get_post_thumbnail_id(get_the_ID(), 'tool-tip'));
+			//$thumbnailsrc =  wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), array( 60,60 ), false, '' );
+
+
+//$array_of_nodes = pushToPlacementArray($array_of_nodes, $parent_id, $node_number, $node_row);
+			$array_of_nodes = pushToPlacementArray($array_of_nodes, $node_number, get_the_title(), $parent_id, $node_row, array(
+				$parent_HTML_class,
+				'side'
+			), array( generateQTipAttr($thumbnailsrc) ), $fag);
 
 			$node_number ++;
 
@@ -344,7 +359,7 @@ function calculatePlacements($array_of_posts, $array_of_categories) {
 
 		$rad_argument = deg2rad(90);
 		$y            = $height * ( sin($rad_argument) );
-		$coordinates = addCoordinates(array_pop($array_of_posts), 0, $y);
+		$coordinates  = addCoordinates(array_pop($array_of_posts), 0, $y);
 		array_push($res, $coordinates);
 		$size = $size - 1;
 
@@ -452,6 +467,40 @@ function generateQTipAttr($string) {
 
 
 	return ' qtip-attr="' . $string . '"';
+
+
+}
+
+
+function printFagMenu($array_of_fag) {
+
+	?>
+
+	<div style="display:none">
+		<div id="fagmenu">
+
+			<?php
+
+
+			foreach ($array_of_fag as $fagid => $name) {
+
+				?>
+
+
+				<a class="<?php echo $fagid; ?>" onclick="menuItemClicked('<?php echo $fagid; ?>', getRodID($(this)))" href="#"> <?php echo $name; ?> </a>
+
+
+
+
+
+
+
+			<?php
+			}
+			?>
+		</div>
+	</div>
+<?php
 
 
 }

@@ -46,7 +46,7 @@
 			<button onclick="disconnectFag('fag2'); $('#fag2-container').visibilityToggle()">Hide fag 2 REAL</button>
 			<button onclick="placeFag('fag2', 'rod1')">PLACE fag 2 at 1 REAL</button>
 			<button onclick="connectFag('fag2'); $('#fag2-container').visibilityToggle()">Show fag 2 REAL</button>
-			<button onclick="reroot('node1')">DOOM!</button>
+			<button onclick="reroot('node8')">DOOM!</button>
 			</div>
 
 

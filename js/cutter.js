@@ -1,64 +1,97 @@
 
     function reroot(elementid) {
 
-        elementid = idfy(elementid); // sørg for at ID bliver repræsenteret rigtigt
 
-        var elementClass = $(elementid).attr('class'); // hent klasserne ud af elementet
+        var elementClass = $(idfy(elementid)).attr('class'); // hent klasserne ud af elementet
         var classArray = elementClass.split(' '); // array til alle klasser
         var arrayOfNodeFag = getFagArray(classArray); // hent de elementer som tilhører faget
 
 
 
         var childArray = [];
-        childArray.push(elementid);
+        var elementstobehidden = [];
+
+        childArray.push(idfy(elementid));
 
         for(var index in arrayOfNodeFag) {
-
 
             var arrayOfNodeIDs = $(arrayOfNodeFag[index]).map(function(index) {
                 // this callback function will be called once for each matching element
                 return this.id;
             });
 
-
-
             childArray = getChildArray(arrayOfNodeIDs, childArray, elementid);
+
+            elementstobehidden = getElementsToBeHidden(arrayOfNodeIDs, elementid);
+
+            //console.log(elementstobehidden);
 
         }
 
-        //var elementsToBeHidden = compareArrays(childArray, arrayOfNodeIDs);
-        //
-        //console.log(elementsToBeHidden);
-        //
-        //for(var index2 in elementsToBeHidden){
-        //    $(elementsToBeHidden[index2]).hide('slow');
-        //
-        //}
+
+
+
+        for(var i in elementstobehidden) {
+
+            var idtobehidden = elementstobehidden[i];
+
+            if(typeof idtobehidden == 'string') { // sørg for at vi ikke får andet med, dette tjek er vitalt for koden! - der kommer elementer med som ikke er strenge!
+                if (!idtobehidden.search('node')) { // se efter id'er med node
+
+
+                    idtobehidden = idfy(idtobehidden);
+
+                    alert(idtobehidden);
+                    $(idtobehidden).hide();
+
+                }
+            }
+
+
+        }
+
+
 
 
     }
 
-    //function compareArrays(childArray, arrayOfNodes){
-    //
-    //    var nodesToBeRemoved = [];
-    //
-    //    for(var index in arrayOfNodes){
-    //        for(var jindix in childArray){
-    //            if(arrayOfNodes[index] != childArray[jindix]){
-    //                var childID = arrayOfNodes[index];
-    //                if(typeof childID == 'string') {
-    //                    if(!childID.search('node')){
-    //                        alert(childID);
-    //                        nodesToBeRemoved.push(arrayOfNodes[index]);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //
-    //    return nodesToBeRemoved;
-    //
-    //}
+
+
+
+    function getElementsToBeHidden(arrayOfNodes, elementid){ // du vil returnere et array med alle childs af elementet
+
+
+        elementid = idfy(elementid);
+
+        for(var index in arrayOfNodes) {
+
+            var childID = arrayOfNodes[index];
+
+            if(typeof childID == 'string') { // sørg for at vi ikke får andet med, dette tjek er vitalt for koden! - der kommer elementer med som ikke er strenge!
+                if (!childID.search('node')) { // se efter id'er med node
+
+                    var child = childID;
+                    childID = idfy(childID);
+
+                    var parent = $(childID).attr('parent');
+                    var parentid = idfy(parent);
+
+                    if (parentid == elementid) {
+
+                        //childArray.push(childID);
+                        delete arrayOfNodes[index];
+                        //arrayOfNodes.pop(index);
+                        arrayOfNodes = getElementsToBeHidden(arrayOfNodes, child);
+                    }
+                }
+            }
+        }
+
+
+
+        return arrayOfNodes;
+
+    }
 
 
 
@@ -68,6 +101,14 @@
     function getChildArray(arrayOfNodes, childArray, elementid){ // du vil returnere et array med alle childs af elementet
 
 
+
+
+        var elementindex = jQuery.inArray(elementid, arrayOfNodes);
+
+        delete arrayOfNodes[elementindex];
+
+        elementid = idfy(elementid);
+
             for(var index in arrayOfNodes) {
 
                 var childID = arrayOfNodes[index];
@@ -75,6 +116,7 @@
                 if(typeof childID == 'string') { // sørg for at vi ikke får andet med, dette tjek er vitalt for koden! - der kommer elementer med som ikke er strenge!
                     if (!childID.search('node')) { // se efter id'er med node
 
+                        var child = childID;
                         childID = idfy(childID);
 
                         var parent = $(childID).attr('parent');
@@ -83,16 +125,17 @@
                         if (parentid == elementid) {
 
                             childArray.push(childID);
+                            //delete arrayOfNodes[index];
                             //arrayOfNodes.pop(index);
-                            childArray = getChildArray(arrayOfNodes, childArray, childID);
+                            childArray = getChildArray(arrayOfNodes, childArray, child);
                         }
                     }
                 }
             }
 
+
+
         return childArray;
-
-
 
     }
 

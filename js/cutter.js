@@ -1,6 +1,5 @@
 function reroot(elementid) {
 
-
     var elementClass = $(idfy(elementid)).attr('class'); // hent klasserne ud af elementet
     var classArray = elementClass.split(' '); // array til alle klasser
     var arrayOfNodeFag = getFagArray(classArray); // hent de elementer som tilhører faget
@@ -35,12 +34,11 @@ function reroot(elementid) {
 
 function placeTreeByIDs(array_of_ids, root) {
 
-
     var fag = getFagFromNode(root);
 
-    var parentid = idfy(fag);
-    var parent_pos = $(parentid).offset();
-    var parent_width = $(parentid).width();
+    var fagid = idfy(fag);
+    var parent_pos = $(fagid).offset();
+    var parent_width = $(fagid).width();
     var element_width = $(idfy(root)).width();
 
     $(idfy(root)).offset({
@@ -72,6 +70,10 @@ function placeTreeByIDs(array_of_ids, root) {
         }
 
     }
+
+
+
+    connect(root, fag);
 
 }
 
@@ -136,18 +138,6 @@ function getDrawArray(array_of_ids) {
 }
 
 
-function rePlaceElements(array) {
-
-    for (var index in array) {
-
-        var id = array[index];
-
-        //place()
-
-    }
-
-
-}
 
 
 function hideElements(array) {

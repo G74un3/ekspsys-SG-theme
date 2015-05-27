@@ -90,11 +90,12 @@ function printNodes($name, $nodes) {
 		$row       = $node['row'];
 		$x         = $node['x'];
 		$y         = $node['y'];
+		$wp_id     = $node['wp-id'];
 
 		if ( ! empty( $parent_id ) and ! empty( $id )) {
 
 
-			printNode($title, $id, $classes, $attributes, $parent_id, $row, $name, $x, $y);
+			printNode($title, $id, $classes, $attributes, $parent_id, $row, $name, $x, $y, $wp_id);
 
 
 		}
@@ -125,15 +126,25 @@ function cmp($a, $b) {
  *
  * Responsible for prinitn HTML for a single node
  *
- * @param $titel : the titel of the node
+ * @param $title
+ * @param $id
  * @param $array_of_classes : an array cntaining the extra classes the node should have
- * @param $node_number
+ * @param $array_of_attributes
+ * @param $parent_id
+ * @param $row
+ * @param $fag
+ * @param $x_offset
+ * @param $y_offset
+ * @param $wp_id
  *
- * @param $attributes
+ * @internal param $titel : the titel of the node
+ * @internal param $node_number
  *
- * @return
+ * @internal param $attributes
+ *
+ * @return void
  */
-function printNode($title, $id, $array_of_classes, $array_of_attributes, $parent_id, $row, $fag, $x_offset, $y_offset) {
+function printNode($title, $id, $array_of_classes, $array_of_attributes, $parent_id, $row, $fag, $x_offset, $y_offset, $wp_id) {
 
 	$classes = "";
 	foreach ($array_of_classes as $class) {
@@ -148,13 +159,17 @@ function printNode($title, $id, $array_of_classes, $array_of_attributes, $parent
 
 	?>
 
+
+	<!-- <a href="<?php echo get_permalink($wp_id); ?>">-->
 	<div
+		onclick="reroot('<?php echo $id; ?>')"
 		id="<?php echo $id; ?>"
 		class="draggable<?php echo $classes . " " . $fag . " row" . $row; ?>" <?php echo $attributes; ?>
 		parent="<?php echo $parent_id; ?>" row="<?php echo $row; ?>" x-offset="<?php echo $x_offset; ?>"
 		y-offset="<?php echo $y_offset; ?>">
 		<p><?php echo $title; ?> </p>
 	</div>
+	<!-- </a>-->
 
 
 <?php
@@ -190,12 +205,11 @@ function printSubCategories($category_id, $row_number, $parent_id, $node_number,
 			$cat_id               = $category->term_id;
 			$current_child_number = $node_number; //Stored for recursive call
 
-
 			//$array_categories = pushToPlacementArray($array_categories, $parent_id, $node_number, $row_number);
 			$array_categories = pushToPlacementArray($array_categories, $node_number, $category->name, $parent_id, $row_number, array(
 				$child_HTML_class,
 				'emne'
-			), array(), $fag);
+			), array(), $fag, $cat_id);
 
 			//TODO: Find a nicer way of doing this :(
 			$node_number ++; // WE know we have just pushed so we increment node number
@@ -256,7 +270,7 @@ function printPosts($category_id, $parent_HTML_class, $parent_id, $node_number, 
 			$array_of_nodes = pushToPlacementArray($array_of_nodes, $node_number, get_the_title(), $parent_id, $node_row, array(
 				$parent_HTML_class,
 				'side'
-			), array( generateQTipAttr($thumbnailsrc) ), $fag);
+			), array( generateQTipAttr($thumbnailsrc) ), $fag, get_the_ID());
 
 			$node_number ++;
 
@@ -289,7 +303,7 @@ function queryOfPosts($category_id) {
  *
  * @return mixed
  */
-function pushToPlacementArray($push_array, $node_number, $title, $parent_id, $row, $array_of_classes, $array_of_extra_attributes, $fag) {
+function pushToPlacementArray($push_array, $node_number, $title, $parent_id, $row, $array_of_classes, $array_of_extra_attributes, $fag, $wpid) {
 
 
 	array_push($push_array, array(
@@ -299,12 +313,16 @@ function pushToPlacementArray($push_array, $node_number, $title, $parent_id, $ro
 		'title'      => $title,
 		'classes'    => $array_of_classes,
 		'attributes' => $array_of_extra_attributes,
-		'fag'        => $fag
+		'fag'        => $fag,
+		'wp-id'      => $wpid
 	)); //Used to calculate placements later
 
 	return $push_array;
 
 }
+
+//		$wp_id     = $node['wp-id'];
+
 
 function nodifyNumber($number) {
 

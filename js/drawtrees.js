@@ -13,7 +13,6 @@ function changeTree(functioncall, fag) {
 
         elements.each(function () {
 
-
             if (typeof functioncall === "function") {
 
                 functioncall($(this));

@@ -126,14 +126,19 @@ function menuItemClicked(fag, rod) {
             toogleVisible(fag);
             updateItemGrey(fag);
 
+            uncut(fag, rod);
+
             placeAndConnect(fag, rod);
 
         } else if (lastrod == rod) { //element should be hidden
+
+            uncut(fag, rod);
 
             $(fagclass).removeAttr(atrname);
 
             toogleVisible(fag);
             updateItemGrey(fag);
+
 
         } else { //Rote should be moved
 

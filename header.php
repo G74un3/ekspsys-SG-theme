@@ -1,4 +1,3 @@
-<!--suppress ALL -->
 <html>
 <head>
     <title> <?php echo get_bloginfo('name'); ?> </title>
@@ -17,50 +16,19 @@
 
 	<script type="text/JavaScript">
 		$(document).ready(function() {
-
 			$( ".draggable" ).draggable();
 			$.repeat().add('connection').each($).connections('update').wait(0);
-
 
 			$('#container').position({ //Positioning roots vreaking the pattern :(
 				my: "center bottom",
 				at: "center bottom",
 				of: "#content"
-
 			});
-
-			/*
-			$('#rod1').position({
-				my: "left bottom",
-				at: "left bottom",
-				of: "#content"
-
-			});
-
-			$('#rod2').position({
-				my: "center bottom",
-				at: "center bottom",
-				of: "#content"
-
-			});
-
-			$('#rod3').position({
-				my: "right bottom",
-				at: "right bottom",
-				of: "#content"
-
-			});*/
-
-
 		});
-
 	</script>
-
-
 </head>
 <body>
     <div id="wrapper">
     <div id="header">
-    <h1>HEADER</h1>
-	    <?php get_search_form(); ?>
+	    <!-- <?php //get_search_form(); ?>-->
     </div>

@@ -5,8 +5,8 @@ $array_of_placements           = array();
 $array_of_placements_by_parent = array();
 $fag                           = array();
 $angle                         = 80;
-$height                        = 150;
-$width                         = 150;
+$height                        = 100;
+$width                         = 100;
 
 //Get all categories from wp
 $categories = get_categories();
@@ -506,9 +506,6 @@ function printFagMenu($array_of_fag) {
 
 
 				<a class="<?php echo $fagid; ?>" onclick="menuItemClicked('<?php echo $fagid; ?>', getRodID($(this)))" href="#"> <?php echo $name; ?> </a>
-
-
-
 
 
 

@@ -77,6 +77,17 @@ function placeTreeByIDs(array_of_ids, root) {
 
 }
 
+function uncut(fag, rod) {
+
+    $(classyfy(fag)).show();
+
+    placeAndConnect(fag, rod);
+
+
+}
+
+
+
 
 function getFagFromNode(nodeid) {
 

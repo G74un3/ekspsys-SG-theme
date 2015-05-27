@@ -6,12 +6,12 @@ add_image_size( 'tool-tip', 10, 0, true); //Adds the size of featured images usk
 
 
 // Replace category checkboxes with radio buttons so you can only choose one
-if(
+/*if(
     strstr($_SERVER['REQUEST_URI'], 'wp-admin/post-new.php') ||
     strstr($_SERVER['REQUEST_URI'], 'wp-admin/post.php') ) {
 
     ob_start('one_category_only');
-}
+}*/
 
 function one_category_only($content) {
     $content = str_replace('type="checkbox" ', 'type="radio" ', $content);
